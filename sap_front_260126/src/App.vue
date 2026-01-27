@@ -25,7 +25,7 @@
               <span class="u-sep"> | </span>
               <span class="u-name">{{ userData.name }} 관리자     </span>
               <button @click="logout" class="logout-small-btn">로그아웃</button>
-              <span class="user-avatar">  |  👤</span>
+              <span class="user-avatar" @click="currentView = 'Settings'" :class="{ active: currentView === 'Settings' }">  |  👤</span>
             </div>
          
           </div>
@@ -67,9 +67,9 @@ import { ref, reactive } from 'vue';
 
 import Home from './views/HomeView.vue';
 import Dashboard from './views/DashboardView.vue';
-import Settings from './views/SettingsView.vue';
+import Settings from './views/my.vue';
 import Login from './views/LoginView.vue';
-
+import myedit from './views/myedit.vue';
 const views = { Home, Dashboard, Settings, Login };
 const currentView = ref('Home'); // 로그인 후 첫 화면
 const isLoggedIn = ref(false); // 초기값은 false
