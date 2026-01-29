@@ -75,8 +75,8 @@ select * from storage.locker_usage order by locker_usage.created_at desc
 
 -- drop table storage.user;
 
-select * from storage.user;
-select * from storage.incident_comment;
+-- select * from storage.user;
+-- select * from storage.incident_comment;
 
 -- 장애/발생 테이블 생성
 -- Create Table storage.incident(
@@ -84,10 +84,11 @@ select * from storage.incident_comment;
 -- 	incident_id				SERIAL		 	PRIMARY KEY,
 -- 	incident_title			VARCHAR(30)		not null,
 -- 	incident_line_name		VARCHAR(10),
--- 	incident_station_id 	VARCHAR(10)		not null,
+-- 	incident_station_id 	VARCHAR(10),
 -- 	incident_station_name	VARCHAR(100),
 -- 	incident_content		VARCHAR(1000),
 -- 	incident_status			VARCHAR(10)		not null,
+-- 	incident_severity	 	VARCHAR(10)		not null,
 -- 	user_id					VARCHAR(20)		not null,
 -- 	user_name				VARCHAR(10),
 -- 	create_at				TIMESTAMP 		DEFAULT CURRENT_TIMESTAMP,
@@ -95,6 +96,9 @@ select * from storage.incident_comment;
 -- 	FOREIGN KEY (user_id) REFERENCES storage.user(user_id)
 	
 -- );
+
+-- drop table storage.incident;
+-- drop table storage.incident_comment;
 
 
 -- 댓글 테이블 생성
