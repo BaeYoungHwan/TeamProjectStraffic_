@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // 1. 컴포넌트들을 상단에서 모두 import (정적 임포트 방식)
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import DashboardView from '../views/DashboardView.vue'
+import statusstation from '../views/statusstation.vue'
 import regi from '../views/regi.vue'
 import my from '../views/my.vue'
 import myedit from '../views/myedit.vue'
@@ -21,9 +21,9 @@ const router = createRouter({
       component: LoginView 
     },
     { 
-      path: '/main/dashboard', 
-      name: 'dashboard', 
-      component: DashboardView 
+      path: '/main/statusstation', 
+      name: 'statusstation', 
+      component: statusstation
     },
     { 
       path: '/user/ reg', 
