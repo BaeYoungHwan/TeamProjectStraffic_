@@ -44,7 +44,7 @@
       <aside class="sidebar">
         <nav>
           <div class="nav-item" @click="currentView = 'Home'" :class="{ active: currentView === 'Home' }">▶대시보드</div>
-          <div class="nav-item" @click="currentView = 'Dashboard'" :class="{ active: currentView === 'Dashboard' }">▶역별현황</div>
+          <div class="nav-item" @click="currentView = 'statusstation'" :class="{ active: currentView === 'statusstation' }">▶역별현황</div>
           <div class="nav-item" @click="currentView = 'analysis'" :class="{ active: currentView === 'analysis' }">▶통계 분석</div>
           <div class="nav-item" @click="currentView = 'Issue'" :class="{ active: currentView === 'Issue' }">▶장애/이슈</div>
           <div class="nav-item" @click="currentView = 'management'" :class="{ active: currentView === 'management' }">▶사용자 관리</div>
@@ -81,14 +81,14 @@ import logo from './assets/로고.png'
 import logofooter from './assets/로고 글자.png'
 import mypageimage from './assets/마이페이지(W).png'
 import Home from './views/HomeView.vue';
-import Dashboard from './views/DashboardView.vue';
+import statusstation from './views/statusstation.vue';
 import management from './views/management.vue';
 import Login from './views/LoginView.vue';
 import Regi from './views/regi.vue';
 import myedit from './views/myedit.vue';
 import my from './views/my.vue';
 
-const views = { Home, Dashboard, management, Login, Regi , myedit, my };
+const views = { Home, statusstation, management, Login, Regi , myedit, my };
 const currentView = ref('Login');
 const isLoggedIn = ref(false);
 
