@@ -21,7 +21,7 @@ public class StatusController {
 	StatusService service;
 	
 	// 검색시 해당 역의 대한 현황 List로 불러오기
-	@GetMapping("getstatus")
+	@GetMapping("get_status")
     public ResponseEntity<List<StatusDto>> getStatus(@RequestParam Map<String, Object> params) {
         System.out.println("조회 요청 파라미터: " + params);
 
@@ -32,7 +32,7 @@ public class StatusController {
 	
 	
 	// DB에 저장된 모든역의 ID,이름,호선을 검색에 이용하기 위해 가져오기
-	@GetMapping("getallstations")
+	@GetMapping("get_allstations")
 	public ResponseEntity<List<StatusDto>> getAllStations() {
 		System.out.println("StatusController getallstations 실행: " + new Date());
 		
