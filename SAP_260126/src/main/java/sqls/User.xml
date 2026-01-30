@@ -46,7 +46,6 @@
 		select *
 		from storage.user
 		where user_id=#{user_id} and user_pw=#{user_pw} 
-		and auth IN ('1', '2') 
 	</select>	
 
 	<update id="update_user" parameterType="com.mbc.sap.dto.UserDto">
@@ -61,7 +60,7 @@
         user_id = #{user_id}
 	</update>
 	
-	<select id="get_newuserlist" parameterType="com.mbc.sap.dto.UserParam" resultType="com.mbc.sap.dto.UserDto">
+	<select id="get_newuserlist" parameterType="com.mbc.sap.dto.UserParam" resultMap="UserMap">
     SELECT 
         user_id, 
         user_name, 
@@ -78,4 +77,76 @@
     FROM storage.user 
     WHERE auth = '3'  </select>
 	
+	
+<update id="reject_user" parameterType="string">
+    UPDATE storage.user
+    SET auth = 4
+    WHERE user_id = #{user_id}
+</update>
+
+<update id="approve_user" parameterType="string">
+    UPDATE storage.user
+    SET auth = 2
+    WHERE user_id = #{user_id}
+</update>
+
+
+<select id="get_olduserlist" parameterType="com.mbc.sap.dto.UserParam" resultMap="UserMap">
+        SELECT 
+            user_id, 
+            user_name, 
+            line_name, 
+            station_name, 
+            auth
+        FROM storage.user
+        WHERE auth != '3'
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (user_id LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR user_name LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
+        ORDER BY 
+        CASE WHEN auth = '1' THEN 0 ELSE 1 END ASC,
+        CASE WHEN auth = '4' THEN 1 ELSE 0 END ASC,  user_id DESC
+        LIMIT 5 OFFSET #{offset}
+        
+    </select>
+
+    <select id="count_olduser" parameterType="com.mbc.sap.dto.UserParam" resultType="int">
+        SELECT COUNT(*) 
+        FROM storage.user 
+        WHERE auth != '3'
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (user_id LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR user_name LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
+    </select>
+	
+	<update id="approveUsersBatch" parameterType="list">
+    UPDATE storage.user
+    SET auth = 2  WHERE user_id IN
+    <foreach collection="list" item="id" open="(" separator="," close=")">
+        #{id}
+    </foreach>
+	</update>
+	
+	
+	<update id="reject_usersBatch" parameterType="list">
+    UPDATE storage.user
+    SET auth = 4  WHERE user_id IN
+    <foreach collection="list" item="id" open="(" separator="," close=")">
+        #{id}
+    </foreach>
+	</update>
+	
+		<update id="update_olduser_auth" parameterType="com.mbc.sap.dto.UserDto">
+    UPDATE storage.user
+    SET auth = #{auth}
+    
+    WHERE 
+        user_id = #{user_id}
+	</update>
+
 </mapper>
+
+
+

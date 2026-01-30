@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import com.mbc.sap.dto.UserDto;
+import com.mbc.sap.dto.UserParam;
 
 @Mapper
 @Repository
@@ -19,4 +20,12 @@ public interface UserDao {
 	int update_user(UserDto dto);
 	List<UserDto> get_newuserlist();
 	int count_newuser();
+	int reject_user(UserDto dto);
+	int approve_user(UserDto dto);
+	List<UserDto> get_olduserlist(UserParam param);
+	int count_olduser(UserParam param);
+	int approveUsersBatch(List<String> userIds);
+	int rejectUsersBatch(List<String> userIds);
+	int update_olduser_auth(UserDto dto);
+	int reject_usersBatch(List<String> userIds);
 }

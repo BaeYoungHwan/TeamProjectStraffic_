@@ -86,12 +86,23 @@ export default{
       axios.post('http://localhost:9000/check_login', null, param)
       .then(resp => {
         let user = resp.data;
-
+        console.log("로그인 시도 유저 정보:", user);
         // 백엔드 응답 데이터 확인 (id가 아니라 user_id로 올 확률이 높음)
         if (!user || user.user_id === undefined) {
-          alert('아이디 또는 비밀번호가 틀렸거나 아직 승인대기중입니다');
+          alert('아이디 또는 비밀번호가 틀렸습니다');
           return;
-        }
+        }// 2. 권한(auth) 상태별 분기 처리
+      if (user.auth === '3') {
+      // 관리자가 명시적으로 차단했거나 삭제한 경우
+       alert('대기중 계정입니다. 관리자에게 문의하세요.');
+        return;
+      }
+        
+      if (user.auth === '4') {
+      // 관리자가 명시적으로 차단했거나 삭제한 경우
+       alert('비활성화된 계정입니다. 관리자에게 문의하세요.');
+        return;
+      }
 
         // 세션 저장
         sessionStorage.setItem("login", JSON.stringify(user));
