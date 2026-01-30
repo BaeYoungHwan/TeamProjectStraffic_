@@ -93,7 +93,6 @@ const isVisible = (key) => selectedCategories.value.includes(key);
 
 const handleSearch = async (searchData) => {
   try {
-    // ⭐ 매핑 수정: get_status
     const res = await axios.get('http://localhost:9000/get_status');
     let allData = res.data;
 
@@ -110,7 +109,6 @@ const handleSearch = async (searchData) => {
       displayList.value = allData.filter(s => s.station_name.includes(searchData.keyword));
     }
 
-    // 1호선 -> 9호선 순 정렬
     displayList.value.sort((a, b) => a.line_name.localeCompare(b.line_name, undefined, { numeric: true }));
 
   } catch (err) { console.error("데이터 로드 실패:", err); }

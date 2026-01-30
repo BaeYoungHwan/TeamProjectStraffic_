@@ -67,7 +67,6 @@ const emit = defineEmits(['search']);
 const lineOptions = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선'];
 const searchContainer = ref(null);
 
-// 호선별 테마 색상
 const getLineColor = (line) => {
   const colors = {
     '1호선': '#0052A4', '2호선': '#00A84D', '3호선': '#EF7C1C', '4호선': '#00A5DE',
@@ -81,10 +80,8 @@ const filters = reactive({ line: '', stationSearch: '' });
 const showResults = ref(false);
 const selectedStation = ref(null);
 
-// 검색 가능 여부 확인
 const isSearchReady = computed(() => filters.line !== '' || filters.stationSearch.trim() !== '');
 
-// 초기 데이터 로드 (전체 역 정보)
 const fetchAllStations = async () => {
   try {
     const res = await axios.get('http://localhost:9000/get_allstations');
@@ -92,7 +89,6 @@ const fetchAllStations = async () => {
   } catch (err) { console.error(err); }
 };
 
-// 외부 클릭 시 자동완성 창 닫기
 const handleClickOutside = (event) => {
   if (searchContainer.value && !searchContainer.value.contains(event.target)) {
     showResults.value = false;
@@ -108,7 +104,6 @@ onUnmounted(() => {
   window.removeEventListener('click', handleClickOutside);
 });
 
-// 자동완성 필터링 로직
 const filteredStations = computed(() => {
   const keyword = filters.stationSearch.trim();
   if (filters.line) {
@@ -144,7 +139,6 @@ const selectStation = (st) => {
   executeSearch(); 
 };
 
-// 검색 실행
 const executeSearch = () => {
   showResults.value = false;
   const keyword = filters.stationSearch.trim();
@@ -157,13 +151,11 @@ const executeSearch = () => {
   }
 };
 
-// 검색 초기화 함수 (요청하신 기능)
 const resetFilters = () => {
   filters.line = '';
   filters.stationSearch = '';
   selectedStation.value = null;
   showResults.value = false;
-  // 초기화 후 부모에게 전체 조회를 하도록 알림
   emit('search', { type: 'reset' }); 
 };
 </script>
@@ -181,7 +173,6 @@ const resetFilters = () => {
 
 .button-group { display: flex; gap: 10px; }
 
-/* 검색 버튼 스타일 */
 .icon-search-btn {
   width: 42px; height: 42px;
   display: flex; align-items: center; justify-content: center;
@@ -189,7 +180,6 @@ const resetFilters = () => {
 }
 .icon-search-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
-/* 초기화 버튼 스타일 (요청하신 흰색 바탕) */
 .icon-reset-btn {
   width: 42px; height: 42px;
   display: flex; align-items: center; justify-content: center;
