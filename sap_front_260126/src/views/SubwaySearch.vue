@@ -119,7 +119,17 @@ const filteredStations = computed(() => {
   return [];
 });
 
+/**
+ * 수정된 호선 클릭 핸들러
+ * 다른 호선을 클릭하거나 같은 호선을 취소할 때 역 검색창을 초기화합니다.
+ */
 const handleLineClick = (line) => {
+  // 기존 호선과 다른 호선을 클릭했거나, 이미 선택된 호선을 다시 클릭(취소)할 때
+  if (filters.line !== line || filters.line === line) {
+    filters.stationSearch = ''; // 역 검색어 초기화
+    selectedStation.value = null; // 선택된 역 데이터 초기화
+  }
+  
   filters.line = filters.line === line ? '' : line;
   showResults.value = false;
 };
@@ -170,16 +180,13 @@ const resetFilters = () => {
 .line-btn.active { color: white; }
 .input-relative { position: relative; }
 .search-input-wrapper input { width: 250px; padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
-
 .button-group { display: flex; gap: 10px; }
-
 .icon-search-btn {
   width: 42px; height: 42px;
   display: flex; align-items: center; justify-content: center;
   background: #333; color: white; border: none; border-radius: 8px; cursor: pointer;
 }
 .icon-search-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
-
 .icon-reset-btn {
   width: 42px; height: 42px;
   display: flex; align-items: center; justify-content: center;
@@ -187,7 +194,6 @@ const resetFilters = () => {
   transition: all 0.2s;
 }
 .icon-reset-btn:hover { background: #f8f9fa; border-color: #bbb; }
-
 .auto-complete-list { position: absolute; top: calc(100% + 5px); left: 0; width: 100%; background: white; border: 1px solid #ddd; border-radius: 8px; z-index: 1000; max-height: 250px; overflow-y: auto; list-style: none; padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 .auto-complete-list li { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
 .auto-complete-list li:hover { background-color: #f8f9fa; }
