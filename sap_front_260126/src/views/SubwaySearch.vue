@@ -39,12 +39,22 @@
         </div>
       </div>
 
-      <button class="icon-search-btn" @click="executeSearch" :disabled="!isSearchReady" title="현황 조회">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-      </button>
+      <div class="button-group">
+        <button class="icon-search-btn" @click="executeSearch" :disabled="!isSearchReady" title="현황 조회">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <button class="icon-reset-btn" @click="resetFilters" title="검색 초기화">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6"></path>
+            <path d="M1 20v-6h6"></path>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +67,7 @@ const emit = defineEmits(['search']);
 const lineOptions = ['1호선', '2호선', '3호선', '4호선', '5호선', '6호선', '7호선', '8호선', '9호선'];
 const searchContainer = ref(null);
 
+// 호선별 테마 색상
 const getLineColor = (line) => {
   const colors = {
     '1호선': '#0052A4', '2호선': '#00A84D', '3호선': '#EF7C1C', '4호선': '#00A5DE',
@@ -70,8 +81,10 @@ const filters = reactive({ line: '', stationSearch: '' });
 const showResults = ref(false);
 const selectedStation = ref(null);
 
+// 검색 가능 여부 확인
 const isSearchReady = computed(() => filters.line !== '' || filters.stationSearch.trim() !== '');
 
+// 초기 데이터 로드 (전체 역 정보)
 const fetchAllStations = async () => {
   try {
     const res = await axios.get('http://localhost:9000/get_allstations');
@@ -79,6 +92,7 @@ const fetchAllStations = async () => {
   } catch (err) { console.error(err); }
 };
 
+// 외부 클릭 시 자동완성 창 닫기
 const handleClickOutside = (event) => {
   if (searchContainer.value && !searchContainer.value.contains(event.target)) {
     showResults.value = false;
@@ -94,6 +108,7 @@ onUnmounted(() => {
   window.removeEventListener('click', handleClickOutside);
 });
 
+// 자동완성 필터링 로직
 const filteredStations = computed(() => {
   const keyword = filters.stationSearch.trim();
   if (filters.line) {
@@ -129,6 +144,7 @@ const selectStation = (st) => {
   executeSearch(); 
 };
 
+// 검색 실행
 const executeSearch = () => {
   showResults.value = false;
   const keyword = filters.stationSearch.trim();
@@ -139,6 +155,16 @@ const executeSearch = () => {
   } else if (filters.line) {
     emit('search', { type: 'line', line_name: filters.line, keyword: keyword });
   }
+};
+
+// 검색 초기화 함수 (요청하신 기능)
+const resetFilters = () => {
+  filters.line = '';
+  filters.stationSearch = '';
+  selectedStation.value = null;
+  showResults.value = false;
+  // 초기화 후 부모에게 전체 조회를 하도록 알림
+  emit('search', { type: 'reset' }); 
 };
 </script>
 
@@ -152,12 +178,26 @@ const executeSearch = () => {
 .line-btn.active { color: white; }
 .input-relative { position: relative; }
 .search-input-wrapper input { width: 250px; padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+
+.button-group { display: flex; gap: 10px; }
+
+/* 검색 버튼 스타일 */
 .icon-search-btn {
   width: 42px; height: 42px;
   display: flex; align-items: center; justify-content: center;
   background: #333; color: white; border: none; border-radius: 8px; cursor: pointer;
 }
 .icon-search-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+/* 초기화 버튼 스타일 (요청하신 흰색 바탕) */
+.icon-reset-btn {
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  background: #ffffff; color: #333; border: 1px solid #ddd; border-radius: 8px; cursor: pointer;
+  transition: all 0.2s;
+}
+.icon-reset-btn:hover { background: #f8f9fa; border-color: #bbb; }
+
 .auto-complete-list { position: absolute; top: calc(100% + 5px); left: 0; width: 100%; background: white; border: 1px solid #ddd; border-radius: 8px; z-index: 1000; max-height: 250px; overflow-y: auto; list-style: none; padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 .auto-complete-list li { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
 .auto-complete-list li:hover { background-color: #f8f9fa; }
